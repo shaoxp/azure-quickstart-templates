@@ -201,7 +201,7 @@
     },
     "marvel": {
       "type": "string",
-      "defaultValue": "yes",
+      "defaultValue": "no",
       "allowedValues": [
         "yes",
         "no"

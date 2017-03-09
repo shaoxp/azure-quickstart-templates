@@ -4,6 +4,7 @@
   "parameters": {
     "adminUsername": {
       "type": "string",
+      "defaultValue": "xishao",
       "metadata": {
         "description": "Admin username"
       }
@@ -16,12 +17,14 @@
     },
     "vmPrefix": {
       "type": "string",
+      "defaultValue": "xpelsvm",
       "metadata": {
         "description": "Prefix to use for VM names"
       }
     },
     "commonPrefix": {
       "type": "string",
+      "defaultValue": "xpels",
       "metadata": {
         "description": "Prefix to use for common resources"
       }
@@ -29,7 +32,7 @@
   },
   "variables": {
     "apiVersion": "2015-06-15",
-    "vmSize": "Standard_D1",
+    "vmSize": "Standard_A1",
     "clusterName": "elasticcluster",
     "logTableName": "elasticscriptlog",
     "imagePublisher" : "OpenLogic",
@@ -50,7 +53,7 @@
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables ('subnetName'))]",
 	  "subnetAdminRef": "[concat(variables('vnetID'),'/subnets/',variables ('subnetAdmin'))]",
     "numberOfNodes": 3,
-    "scriptBaseUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/elasticsearch-centos-3node/",
+    "scriptBaseUrl": "https://github.com/shaoxp/azure-quickstart-templates/tree/master/elasticsearch-centos-3node/",
     "elasticScript": "elasticinstall.py",
     "jumpboxScript" : "prep-jumpbox.ps1",
     "installScripts": [
@@ -224,7 +227,7 @@
           "osDisk": {
             "name": "osdisk",
             "vhd": {
-              "uri": "[concat('http://',variables('storageName'),'.blob.core.windows.net/vhds/','osdisk', copyindex(), '.vhd')]"
+              "uri": "[concat('http://',variables('storageName'),'.blob.core.chinacloudapi.cn/vhds/','osdisk', copyindex(), '.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -235,7 +238,7 @@
               "diskSizeGB": "[variables('dataDiskSize')]",
               "lun": 0,
               "vhd": {
-                "uri": "[concat('http://',variables('storageName'),'.blob.core.windows.net/vhds/',parameters('vmPrefix'), copyindex(), 'dataDisk1.vhd')]"
+                "uri": "[concat('http://',variables('storageName'),'.blob.core.chinacloudapi.cn/vhds/',parameters('vmPrefix'), copyindex(), 'dataDisk1.vhd')]"
               },
               "caching": "None",
               "createOption": "Empty"
@@ -335,7 +338,7 @@
           "osDisk": {
             "name": "osdisk",
             "vhd": {
-              "uri": "[concat('http://',variables('storageName'),'.blob.core.windows.net/vhds/jumpbox-osdisk.vhd')]"
+              "uri": "[concat('http://',variables('storageName'),'.blob.core.chinacloudapi.cn/vhds/jumpbox-osdisk.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -372,7 +375,7 @@
   "outputs": {
     "resource-group-url": {
       "type": "string",
-      "value": "[concat('https://ms.portal.azure.com/#asset/HubsExtension/ResourceGroups/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name)]"
+      "value": "[concat('https://portal.azure.cn/#asset/HubsExtension/ResourceGroups/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name)]"
     }
   }
 }

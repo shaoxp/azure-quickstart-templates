@@ -29,7 +29,7 @@ def RunCommand(cmd):
 
 cmds = ["yum -y install nano",
 	"yum -y install java-1.8.0-openjdk.x86_64",
-	"curl 'https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.3.noarch.rpm' -o 'elasticsearch-1.7.3.noarch.rpm'",
+	"curl 'https://mccdnint.blob.core.chinacloudapi.cn/els/elasticsearch-1.7.3.noarch.rpm' -o 'elasticsearch-1.7.3.noarch.rpm'",
 	"rpm -ivh elasticsearch-1.7.3.noarch.rpm",
 	"systemctl enable elasticsearch.service",
 	"/usr/share/elasticsearch/bin/plugin -install royrusso/elasticsearch-HQ",
