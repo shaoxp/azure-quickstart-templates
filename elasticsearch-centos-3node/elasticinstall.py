@@ -32,7 +32,7 @@ cmds = ["yum -y install nano",
 	"curl 'https://mccdnint.blob.core.chinacloudapi.cn/els/elasticsearch-1.7.3.noarch.rpm' -o 'elasticsearch-1.7.3.noarch.rpm'",
 	"rpm -ivh elasticsearch-1.7.3.noarch.rpm",
 	"systemctl enable elasticsearch.service",
-	"/usr/share/elasticsearch/bin/plugin -install royrusso/elasticsearch-HQ",
+	"/usr/share/elasticsearch/bin/plugin -install royrusso/elasticsearch-HQ/v1.0.0",
 	"/usr/share/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-cloud-azure/2.8.2"]
 
 print "start running installs"

@@ -41,7 +41,7 @@
     "availabilitySetName": "[concat(parameters('VMPrefix'), 'AvSet')]",
     "storageName" : "[toLower(concat(parameters('commonPrefix'), uniqueString(resourceGroup().id)))]",
     "storageAccountType": "Standard_LRS",
-    "dataDiskSize": "1023",
+    "dataDiskSize": "256",
     "virtualNetworkName":  "[concat(parameters('commonPrefix'), 'VNet')]" ,
     "publicIPAddressName": "JumpboxIP",
     "publicIPAddressType": "Dynamic",
@@ -53,7 +53,7 @@
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables ('subnetName'))]",
 	  "subnetAdminRef": "[concat(variables('vnetID'),'/subnets/',variables ('subnetAdmin'))]",
     "numberOfNodes": 3,
-    "scriptBaseUrl": "https://github.com/shaoxp/azure-quickstart-templates/tree/master/elasticsearch-centos-3node/",
+    "scriptBaseUrl": "https://raw.githubusercontent.com/shaoxp/azure-quickstart-templates/master/elasticsearch-centos-3node/",
     "elasticScript": "elasticinstall.py",
     "jumpboxScript" : "prep-jumpbox.ps1",
     "installScripts": [
