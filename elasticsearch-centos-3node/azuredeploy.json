@@ -32,7 +32,7 @@
   },
   "variables": {
     "apiVersion": "2015-06-15",
-    "vmSize": "Standard_A1",
+    "vmSize": "Standard_D2v2",
     "clusterName": "elasticcluster",
     "logTableName": "elasticscriptlog",
     "imagePublisher" : "OpenLogic",
@@ -41,7 +41,7 @@
     "availabilitySetName": "[concat(parameters('VMPrefix'), 'AvSet')]",
     "storageName" : "[toLower(concat(parameters('commonPrefix'), uniqueString(resourceGroup().id)))]",
     "storageAccountType": "Standard_LRS",
-    "dataDiskSize": "256",
+    "dataDiskSize": "1023",
     "virtualNetworkName":  "[concat(parameters('commonPrefix'), 'VNet')]" ,
     "publicIPAddressName": "JumpboxIP",
     "publicIPAddressType": "Dynamic",
