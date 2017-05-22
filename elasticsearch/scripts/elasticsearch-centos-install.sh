@@ -415,6 +415,29 @@ if [[ "${ES_VERSION}" == \5* ]]; then
     echo "network.host: _non_loopback_" >> /etc/elasticsearch/elasticsearch.yml
 fi
 
+if [[ "${MARVEL_ENDPOINTS}" ]]; then
+  # non-Marvel node
+  mep=$(expand_ip_range "$MARVEL_ENDPOINTS")
+  expanded_marvel_endpoints="[\"${mep// /\",\"}\"]"
+  
+  if [[ "${ES_VERSION}" == \2* ]]; then
+    # 2.x non-Marvel node
+    echo "marvel.agent.exporters:" >> /etc/elasticsearch/elasticsearch.yml
+    echo "  id1:" >> /etc/elasticsearch/elasticsearch.yml
+    echo "    type: http" >> /etc/elasticsearch/elasticsearch.yml
+    echo "    host: ${expanded_marvel_endpoints}" >> /etc/elasticsearch/elasticsearch.yml
+  elif [[ "${ES_VERSION}" == \5* ]]; then
+    # 2.x non-Marvel node
+    echo "marvel.agent.exporters:" >> /etc/elasticsearch/elasticsearch.yml
+    echo "  id1:" >> /etc/elasticsearch/elasticsearch.yml
+    echo "    type: http" >> /etc/elasticsearch/elasticsearch.yml
+    echo "    host: ${expanded_marvel_endpoints}" >> /etc/elasticsearch/elasticsearch.yml
+  else
+    # 1.x non-Marvel node
+    echo "marvel.agent.exporter.hosts: ${expanded_marvel_endpoints}" >> /etc/elasticsearch/elasticsearch.yml
+  fi
+fi
+
 if [[ ${MARVEL_ONLY_NODE} -ne 0 && "${ES_VERSION}" == \1* ]]; then
   # 1.x Marvel node
   echo "marvel.agent.enabled: false" >> /etc/elasticsearch/elasticsearch.yml
@@ -501,7 +524,7 @@ if [ ${INSTALL_CLOUD_AZURE} -ne 0 ]; then
         /usr/share/elasticsearch/bin/plugin install cloud-azure
         echo "cloud.azure.storage.default.account: ${CLOUD_AZURE_ACCOUNT}" >> /etc/elasticsearch/elasticsearch.yml
         echo "cloud.azure.storage.default.key: ${CLOUD_AZURE_KEY}" >> /etc/elasticsearch/elasticsearch.yml
-    else if [[ "${ES_VERSION}" == \5* ]]; then
+    elif [[ "${ES_VERSION}" == \5* ]]; then
         /usr/share/elasticsearch/bin/plugin install cloud-azure
         echo "cloud.azure.storage.default.account: ${CLOUD_AZURE_ACCOUNT}" >> /etc/elasticsearch/elasticsearch.yml
         echo "cloud.azure.storage.default.key: ${CLOUD_AZURE_KEY}" >> /etc/elasticsearch/elasticsearch.yml
