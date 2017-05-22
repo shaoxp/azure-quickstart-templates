@@ -263,17 +263,19 @@ enabled=1' | tee /etc/yum.repos.d/elasticsearch.repo
    if [[ "${ES_VERSION}" == \5* ]]; then
         echo '[elasticsearch-5.x]
 name=Elasticsearch repository for 5.x packages
-baseurl=http://packages.elastic.co/elasticsearch/5.x/centos
+baseurl=https://artifacts.elastic.co/packages/5.x/yum
 gpgcheck=1
-gpgkey=http://packages.elastic.co/GPG-KEY-elasticsearch
-enabled=1' | tee /etc/yum.repos.d/elasticsearch.repo
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md' | tee /etc/yum.repos.d/elasticsearch.repo
     fi
     
     # Install Elasticsearch
     RETRY=0
     while [ $RETRY -lt $MAX_RETRY ]; do
         log "Retry $RETRY: installing elasticsearch..."
-        yum -y install elasticsearch-${ES_VERSION}
+        yum -y install elasticsearch
         if [ $? -ne 0 ]; then
             let RETRY=RETRY+1
         else
@@ -409,12 +411,22 @@ if [[ "${ES_VERSION}" == \2* ]]; then
     echo "network.host: _non_loopback_" >> /etc/elasticsearch/elasticsearch.yml
 fi
 
+if [[ "${ES_VERSION}" == \5* ]]; then
+    echo "network.host: _non_loopback_" >> /etc/elasticsearch/elasticsearch.yml
+fi
+
 if [[ "${MARVEL_ENDPOINTS}" ]]; then
   # non-Marvel node
   mep=$(expand_ip_range "$MARVEL_ENDPOINTS")
   expanded_marvel_endpoints="[\"${mep// /\",\"}\"]"
   
   if [[ "${ES_VERSION}" == \2* ]]; then
+    # 2.x non-Marvel node
+    echo "marvel.agent.exporters:" >> /etc/elasticsearch/elasticsearch.yml
+    echo "  id1:" >> /etc/elasticsearch/elasticsearch.yml
+    echo "    type: http" >> /etc/elasticsearch/elasticsearch.yml
+    echo "    host: ${expanded_marvel_endpoints}" >> /etc/elasticsearch/elasticsearch.yml
+  else if [[ "${ES_VERSION}" == \5* ]]; then
     # 2.x non-Marvel node
     echo "marvel.agent.exporters:" >> /etc/elasticsearch/elasticsearch.yml
     echo "  id1:" >> /etc/elasticsearch/elasticsearch.yml
@@ -509,6 +521,10 @@ fi
 if [ ${INSTALL_CLOUD_AZURE} -ne 0 ]; then
     log "Installing Cloud-Azure Plugin"
     if [[ "${ES_VERSION}" == \2* ]]; then
+        /usr/share/elasticsearch/bin/plugin install cloud-azure
+        echo "cloud.azure.storage.default.account: ${CLOUD_AZURE_ACCOUNT}" >> /etc/elasticsearch/elasticsearch.yml
+        echo "cloud.azure.storage.default.key: ${CLOUD_AZURE_KEY}" >> /etc/elasticsearch/elasticsearch.yml
+    else if [[ "${ES_VERSION}" == \5* ]]; then
         /usr/share/elasticsearch/bin/plugin install cloud-azure
         echo "cloud.azure.storage.default.account: ${CLOUD_AZURE_ACCOUNT}" >> /etc/elasticsearch/elasticsearch.yml
         echo "cloud.azure.storage.default.key: ${CLOUD_AZURE_KEY}" >> /etc/elasticsearch/elasticsearch.yml
