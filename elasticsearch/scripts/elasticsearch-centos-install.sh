@@ -274,8 +274,8 @@ type=rpm-md' | tee /etc/yum.repos.d/elasticsearch.repo
     # Install Elasticsearch
     RETRY=0
     while [ $RETRY -lt $MAX_RETRY ]; do
-        log "Retry $RETRY: installing elasticsearch..."
-        yum -y install elasticsearch
+        log "Retry $RETRY: installing elasticsearch222..."
+        yum -y install elasticsearch-${ES_VERSION}
         if [ $? -ne 0 ]; then
             let RETRY=RETRY+1
         else
@@ -283,7 +283,7 @@ type=rpm-md' | tee /etc/yum.repos.d/elasticsearch.repo
         fi
     done
     if [ $RETRY -eq $MAX_RETRY ]; then
-        log "Failed to install elasticsearch."
+        log "Failed to install elasticsearch22."
         exit 1
     fi
     
