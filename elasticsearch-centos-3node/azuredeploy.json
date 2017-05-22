@@ -32,7 +32,7 @@
   },
   "variables": {
     "apiVersion": "2015-06-15",
-    "vmSize": "Standard_D2v2",
+    "vmSize": "Standard_D2",
     "clusterName": "elasticcluster",
     "logTableName": "elasticscriptlog",
     "imagePublisher" : "OpenLogic",
@@ -321,7 +321,7 @@
       ],
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[variables('vmSize')]"
+          "vmSize": "Standard_DS3_V2"
         },
         "osProfile": {
           "computerName": "Jumpbox",
