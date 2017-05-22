@@ -349,10 +349,10 @@ else
 fi
 
 #expand_staticip_range "$IP_RANGE"
-
+log "tag1"
 S=$(expand_ip_range "$DISCOVERY_ENDPOINTS")
 HOSTS_CONFIG="[\"${S// /\",\"}\"]"
-
+log "tag2"
 #Format the static discovery host endpoints for Elasticsearch configuration ["",""] format
 #HOSTS_CONFIG="[\"${DISCOVERY_ENDPOINTS//-/\",\"}\"]"
 
@@ -413,29 +413,6 @@ fi
 
 if [[ "${ES_VERSION}" == \5* ]]; then
     echo "network.host: _non_loopback_" >> /etc/elasticsearch/elasticsearch.yml
-fi
-
-if [[ "${MARVEL_ENDPOINTS}" ]]; then
-  # non-Marvel node
-  mep=$(expand_ip_range "$MARVEL_ENDPOINTS")
-  expanded_marvel_endpoints="[\"${mep// /\",\"}\"]"
-  
-  if [[ "${ES_VERSION}" == \2* ]]; then
-    # 2.x non-Marvel node
-    echo "marvel.agent.exporters:" >> /etc/elasticsearch/elasticsearch.yml
-    echo "  id1:" >> /etc/elasticsearch/elasticsearch.yml
-    echo "    type: http" >> /etc/elasticsearch/elasticsearch.yml
-    echo "    host: ${expanded_marvel_endpoints}" >> /etc/elasticsearch/elasticsearch.yml
-  else if [[ "${ES_VERSION}" == \5* ]]; then
-    # 2.x non-Marvel node
-    echo "marvel.agent.exporters:" >> /etc/elasticsearch/elasticsearch.yml
-    echo "  id1:" >> /etc/elasticsearch/elasticsearch.yml
-    echo "    type: http" >> /etc/elasticsearch/elasticsearch.yml
-    echo "    host: ${expanded_marvel_endpoints}" >> /etc/elasticsearch/elasticsearch.yml
-  else
-    # 1.x non-Marvel node
-    echo "marvel.agent.exporter.hosts: ${expanded_marvel_endpoints}" >> /etc/elasticsearch/elasticsearch.yml
-  fi
 fi
 
 if [[ ${MARVEL_ONLY_NODE} -ne 0 && "${ES_VERSION}" == \1* ]]; then

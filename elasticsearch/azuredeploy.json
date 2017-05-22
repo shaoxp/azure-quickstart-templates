@@ -98,6 +98,7 @@
       "defaultValue": "Standard_D2_v2",
       "allowedValues": [
         "Standard_D2_v2",
+        "Standard_DS2_v2",
         "Standard_D3_v2",
         "Standard_D4_v2",
         "Standard_A2",
@@ -119,6 +120,7 @@
       "type": "string",
       "defaultValue": "Standard_DS2_v2",
       "allowedValues": [
+        "Standard_D2_v2",
         "Standard_DS2_v2",
         "Standard_D3_v2",
         "Standard_D4_v2",
@@ -141,6 +143,7 @@
       "type": "string",
       "defaultValue": "Standard_DS2_v2",
       "allowedValues": [
+        "Standard_D2_v2",
         "Standard_DS2_v2",
         "Standard_D3_v2",
         "Standard_D4_v2",
@@ -227,6 +230,7 @@
       "defaultValue": "Standard_D2_v2",
       "allowedValues": [
         "Standard_D2_v2",
+        "Standard_DS2_v2",
         "Standard_D3_v2",
         "Standard_D4_v2",
         "Standard_A2",
