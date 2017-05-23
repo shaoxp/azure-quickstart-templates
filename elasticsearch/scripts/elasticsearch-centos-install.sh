@@ -411,10 +411,6 @@ if [[ "${ES_VERSION}" == \2* ]]; then
     echo "network.host: _non_loopback_" >> /etc/elasticsearch/elasticsearch.yml
 fi
 
-if [[ "${ES_VERSION}" == \5* ]]; then
-    echo "network.host: _non_loopback_" >> /etc/elasticsearch/elasticsearch.yml
-fi
-
 if [[ "${MARVEL_ENDPOINTS}" ]]; then
   # non-Marvel node
   mep=$(expand_ip_range "$MARVEL_ENDPOINTS")
