@@ -381,7 +381,7 @@ fi
 
 # Configure discovery
 log "Update configuration with hosts configuration of $HOSTS_CONFIG"
-echo "discovery.zen.ping.multicast.enabled: false" >> /etc/elasticsearch/elasticsearch.yml
+# echo "discovery.zen.ping.multicast.enabled: false" >> /etc/elasticsearch/elasticsearch.yml
 echo "discovery.zen.ping.unicast.hosts: $HOSTS_CONFIG" >> /etc/elasticsearch/elasticsearch.yml
 
 # Configure Elasticsearch node type
