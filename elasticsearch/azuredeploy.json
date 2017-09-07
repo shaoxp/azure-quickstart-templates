@@ -167,7 +167,6 @@
     },
     "vmDataNodeCount": {
       "type": "int",
-      "defaultValue": 3,
       "metadata": {
         "description": "Number of Elasticsearch data nodes"
       }
@@ -1008,6 +1007,9 @@
           "osSettings": {
             "value": "[variables('osSettings')]"
           },
+          "dataDiskSize": {
+            "value": 2046
+          },
           "lbBackendPools": {
             "value": "[variables('dataLBSettings')]"
           }
@@ -1042,9 +1044,6 @@
           },
           "osSettings": {
             "value": "[variables('windowsSettings')]"
-          },
-          "dataDiskSize": {
-            "value": 2046
           },
           "namespace": {
             "value": "[concat(parameters('esClusterName'), '-jumpbox')]"
