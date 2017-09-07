@@ -4,7 +4,7 @@
   "parameters": {
     "adminUsername": {
       "type": "string",
-      "defaultValue": "xishao",
+      "defaultValue": "mooncake",
       "metadata": {
         "description": "Admin username used when provisioning virtual machines"
       }
@@ -76,7 +76,7 @@
     },
     "vmClientNodeCount": {
       "type": "int",
-      "defaultValue": 1,
+      "defaultValue": 0,
       "allowedValues": [
         0,
         1,
@@ -118,7 +118,7 @@
     },
     "vmSizeMasterNodes": {
       "type": "string",
-      "defaultValue": "Standard_DS2_v2",
+      "defaultValue": "Standard_D3_v2",
       "allowedValues": [
         "Standard_D2_v2",
         "Standard_DS2_v2",
@@ -141,11 +141,12 @@
     },
     "vmSizeDataNodes": {
       "type": "string",
-      "defaultValue": "Standard_DS2_v2",
+      "defaultValue": "Standard_DS3_v2",
       "allowedValues": [
         "Standard_D2_v2",
         "Standard_DS2_v2",
         "Standard_D3_v2",
+        "Standard_DS3_v2",
         "Standard_D4_v2",
         "Standard_D12_v2",
         "Standard_A2",
@@ -676,6 +677,11 @@
         "nodesPerStorageAccount": 3,
         "storageAccountType": "Standard_LRS"
       },
+      "Standard_DS3_v2": {
+        "dataDisks": 8,
+        "nodesPerStorageAccount": 3,
+        "storageAccountType": "Standard_LRS"
+      },
       "Standard_D4_v2": {
         "dataDisks": 16,
         "nodesPerStorageAccount": 2,
@@ -794,7 +800,8 @@
       "[div(sub(add(58, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
       "[div(sub(add(59, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
       "[div(sub(add(60, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(61, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]"
+      "[div(sub(add(61, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
+      "[div(sub(add(62, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]"
     ],
     "dataNodeStorageSettings": {
       "count": "[div(sub(add(parameters('vmDataNodeCount'), variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
@@ -1035,6 +1042,9 @@
           },
           "osSettings": {
             "value": "[variables('windowsSettings')]"
+          },
+          "dataDiskSize": {
+            "value": 2046
           },
           "namespace": {
             "value": "[concat(parameters('esClusterName'), '-jumpbox')]"

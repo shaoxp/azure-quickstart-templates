@@ -32,7 +32,7 @@
   },
   "variables": {
     "apiVersion": "2015-06-15",
-    "vmSize": "Standard_D2",
+    "vmSize": "Standard_D3",
     "clusterName": "elasticcluster",
     "logTableName": "elasticscriptlog",
     "imagePublisher" : "OpenLogic",
