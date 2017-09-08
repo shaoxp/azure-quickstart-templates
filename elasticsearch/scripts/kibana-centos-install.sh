@@ -48,7 +48,7 @@ install_java() {
     RETRY=0
     while [ $RETRY -lt $MAX_RETRY ]; do
         echo "Retry $RETRY: downloading jdk-8u92-linux-x64.rpm..."
-        wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u92-b14/jdk-8u92-linux-x64.rpm
+        wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" https://mccdnint.blob.core.chinacloudapi.cn/els/jdk-8u144-linux-x64.rpm
         if [ $? -ne 0 ]; then
             let RETRY=RETRY+1
         else
