@@ -218,7 +218,7 @@ install_java()
         log "Failed to download jdk-8u92-linux-x64.rpm."
         exit 1
     fi
-    yum -y localinstall jdk-8u92-linux-x64.rpm
+    yum -y localinstall jdk-8u144-linux-x64.rpm
 #    rm ~/jdk-8u*-linux-x64.rpm
 }
 
