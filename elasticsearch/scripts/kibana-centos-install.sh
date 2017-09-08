@@ -82,8 +82,8 @@ install_kibana() {
     fi 
     
     if [[ "${ES_VERSION}" == \5* ]]; then
-        echo '[elasticsearch-5.x]
-        name=Elasticsearch repository for 5.x packages
+        echo '[kibana-5.x]
+        name=Kibana repository for 5.x packages
         baseurl=https://artifacts.elastic.co/packages/5.x/yum
         gpgcheck=1
         gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
