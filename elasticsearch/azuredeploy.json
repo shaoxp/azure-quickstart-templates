@@ -677,7 +677,7 @@
         "storageAccountType": "Standard_LRS"
       },
       "Standard_DS3_v2": {
-        "dataDisks": 8,
+        "dataDisks": 4,
         "nodesPerStorageAccount": 3,
         "storageAccountType": "Standard_LRS"
       },

@@ -83,20 +83,20 @@ install_kibana() {
     
     if [[ "${ES_VERSION}" == \5* ]]; then
         echo '[kibana-5.x]
-        name=Kibana repository for 5.x packages
-        baseurl=https://artifacts.elastic.co/packages/5.x/yum
-        gpgcheck=1
-        gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
-        enabled=1
-        autorefresh=1
-        type=rpm-md' | tee /etc/yum.repos.d/kibana.repo
+name=Kibana repository for 5.x packages
+baseurl=https://artifacts.elastic.co/packages/5.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md' | tee /etc/yum.repos.d/kibana.repo
     else
         echo "[kibana-${KIBANA_VERSION}]
-        name=Kibana repository for ${KIBANA_VERSION}.x packages
-        baseurl=http://packages.elastic.co/kibana/${KIBANA_VERSION}/centos
-        gpgcheck=1
-        gpgkey=http://packages.elastic.co/GPG-KEY-elasticsearch
-        enabled=1" | tee /etc/yum.repos.d/kibana.repo
+name=Kibana repository for ${KIBANA_VERSION}.x packages
+baseurl=http://packages.elastic.co/kibana/${KIBANA_VERSION}/centos
+gpgcheck=1
+gpgkey=http://packages.elastic.co/GPG-KEY-elasticsearch
+enabled=1" | tee /etc/yum.repos.d/kibana.repo
     fi
     
     RETRY=0
