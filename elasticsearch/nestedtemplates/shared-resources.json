@@ -8,6 +8,12 @@
         "description": "Network settings object"
       }
     },
+    "existingSubnet": {
+      "type": "object",
+      "metadata": {
+        "description": "The name of the subnet to deploy resources into"
+      }
+    },
     "loadBalancerType": {
       "type": "string",
       "defaultValue": "internal",
@@ -51,7 +57,7 @@
         "Name": "LBFE",
         "Properties": {
           "subnet": {
-            "Id": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('networkSettings').virtualNetworkName), '/subnets/', parameters('networkSettings').subnet.other.name)]"
+            "Id": "[concat(resourceId(parameters('existingSubnet').existingGroup, 'Microsoft.Network/virtualNetworks', parameters('existingSubnet').existingVNet), '/subnets/', parameters('existingSubnet').subnet.other.name)]"
           },
           "privateIPAddress": "[parameters('ilbIpAddress')]",
           "privateIPAllocationMethod": "Static"
