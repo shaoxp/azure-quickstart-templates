@@ -15,6 +15,12 @@
         "description": "Subnet object for provisioning resources in (expects properties name as the subnet name, and vnet as the virtual network name on the object)"
       }
     },
+    "existingVNet": {
+      "type": "object",
+      "metadata": {
+        "description": "The name of the subnet to deploy resources into"
+      }
+    },
     "storageAccountName": {
       "type": "string",
       "metadata": {
@@ -42,7 +48,7 @@
   },
   "variables": {
     "vmSize": "Standard_DS3_v2",
-    "subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('subnet').vnet), '/subnets/', parameters('subnet').name)]",
+    "subnetRef": "[concat(resourceId(parameters('existingVNet').existingGroup, 'Microsoft.Network/virtualNetworks', parameters('existingVNet').existingVNet), '/subnets/', parameters('existingVNet').subnet.other.name)]",
     "vmName": "[concat(parameters('namespace'), '-vm')]",
     "publicIpName": "[concat(parameters('namespace'), '-pip')]",
     "securityGroupName": "[concat(parameters('namespace'), '-nsg')]",
@@ -97,6 +103,9 @@
             "name": "ipconfig1",
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
+              },
               "subnet": {
                 "id": "[variables('subnetRef')]"
               },
