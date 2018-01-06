@@ -102,7 +102,7 @@ enabled=1" | tee /etc/yum.repos.d/kibana.repo
     RETRY=0
     while [ $RETRY -lt $MAX_RETRY ]; do
         echo "Retry $RETRY: installing kibana..."
-        yum install -y kibana-${KIBANA_VERSION}
+        yum install -y kibana-${ES_VERSION}
         if [ $? -ne 0 ]; then
             let RETRY=RETRY+1
         else
