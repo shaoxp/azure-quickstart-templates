@@ -115,11 +115,11 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicName'), copyindex()))]",
-        "[resourceId(concat('Microsoft.Compute/availabilitySets', variables('availabilitySetsName')))]"
+        "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetsName'))]"
       ],
       "properties": {
         "availabilitySet": {
-          "id": "[resourceId(concat('Microsoft.Compute/availabilitySets', variables('availabilitySetsName')))]"
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetsName'))]"
         },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
