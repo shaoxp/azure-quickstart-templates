@@ -1050,10 +1050,10 @@
             "value": "10.0.2.100"
           },
           "ilbDigestIpAddress": {
-            "value": "10.0.2.101"
+            "value": "10.0.2.102"
           },
           "ilbCoordinateIpAddress": {
-            "value": "10.0.2.102"
+            "value": "10.0.2.101"
           }
         }
       }
