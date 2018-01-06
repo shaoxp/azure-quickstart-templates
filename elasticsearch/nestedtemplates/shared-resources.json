@@ -31,7 +31,19 @@
         "description": "Storage Account Settings"
       }
     },
-    "ilbIpAddress": {
+    "ilbDataIpAddress": {
+      "type": "string",
+      "metadata": {
+        "description": "The static IP address to use with the internal load balancer configuration"
+      }
+    },
+    "ilbDigestIpAddress": {
+      "type": "string",
+      "metadata": {
+        "description": "The static IP address to use with the internal load balancer configuration"
+      }
+    },
+    "ilbCoordinateIpAddress": {
       "type": "string",
       "metadata": {
         "description": "The static IP address to use with the internal load balancer configuration"
@@ -52,14 +64,38 @@
         }
       }
     ],
-    "internalFELBConfig": [
+    "internalDataFELBConfig": [
       {
         "Name": "LBFE",
         "Properties": {
           "subnet": {
             "Id": "[concat(resourceId(parameters('existingVNet').existingGroup, 'Microsoft.Network/virtualNetworks', parameters('existingVNet').existingVNet), '/subnets/', parameters('existingVNet').subnet.other.name)]"
           },
-          "privateIPAddress": "[parameters('ilbIpAddress')]",
+          "privateIPAddress": "[parameters('ilbDataIpAddress')]",
+          "privateIPAllocationMethod": "Static"
+        }
+      }
+    ],
+    "internalDigestFELBConfig": [
+      {
+        "Name": "LBFE",
+        "Properties": {
+          "subnet": {
+            "Id": "[concat(resourceId(parameters('existingVNet').existingGroup, 'Microsoft.Network/virtualNetworks', parameters('existingVNet').existingVNet), '/subnets/', parameters('existingVNet').subnet.other.name)]"
+          },
+          "privateIPAddress": "[parameters('ilbDigestIpAddress')]",
+          "privateIPAllocationMethod": "Static"
+        }
+      }
+    ],
+     "internalCoordinateFELBConfig": [
+      {
+        "Name": "LBFE",
+        "Properties": {
+          "subnet": {
+            "Id": "[concat(resourceId(parameters('existingVNet').existingGroup, 'Microsoft.Network/virtualNetworks', parameters('existingVNet').existingVNet), '/subnets/', parameters('existingVNet').subnet.other.name)]"
+          },
+          "privateIPAddress": "[parameters('ilbCoordinateIpAddress')]",
           "privateIPAllocationMethod": "Static"
         }
       }
@@ -152,7 +188,7 @@
         "[resourceId('Microsoft.Network/publicIPAddresses', 'public-ip')]"
       ],
       "properties": {
-        "frontendIPConfigurations": "[variables('feLoadBalancerConfig')]",
+        "frontendIPConfigurations": "[variables('internalDataFELBConfig')]",
         "backendAddressPools": [
           {
             "name": "LBBE"
@@ -186,6 +222,136 @@
               },
               "backendAddressPool": {
                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers', 'es-load-balancer'), '/backendAddressPools/LBBE')]"
+              },
+              "protocol": "Tcp",
+              "frontendPort": 9300,
+              "backendPort": 9300,
+              "enableFloatingIP": false,
+              "idleTimeoutInMinutes": 5
+            }
+          }
+        ],
+        "probes": [
+          {
+            "name": "es-tcp-probe",
+            "properties": {
+              "protocol": "Tcp",
+              "port": 9200,
+              "intervalInSeconds": 30,
+              "numberOfProbes": 3
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2016-03-30",
+      "name": "es-load-balancer-digest",
+      "type": "Microsoft.Network/loadBalancers",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', 'public-ip')]"
+      ],
+      "properties": {
+        "frontendIPConfigurations": "[variables('internalDigestFELBConfig')]",
+        "backendAddressPools": [
+          {
+            "name": "LBBE"
+          }
+        ],
+        "loadBalancingRules": [
+          {
+            "name": "es-http-rule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', 'es-load-balancer-digest'), '/frontendIPConfigurations/LBFE')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', 'es-load-balancer-digest'), '/backendAddressPools/LBBE')]"
+              },
+              "protocol": "Tcp",
+              "frontendPort": 9200,
+              "backendPort": 9200,
+              "enableFloatingIP": false,
+              "idleTimeoutInMinutes": 5,
+              "probe": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', 'es-load-balancer-digest'), '/probes/es-tcp-probe')]"
+              }
+            }
+          },
+          {
+            "name": "es-tcp-rule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', 'es-load-balancer-digest'), '/frontendIPConfigurations/LBFE')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', 'es-load-balancer-digest'), '/backendAddressPools/LBBE')]"
+              },
+              "protocol": "Tcp",
+              "frontendPort": 9300,
+              "backendPort": 9300,
+              "enableFloatingIP": false,
+              "idleTimeoutInMinutes": 5
+            }
+          }
+        ],
+        "probes": [
+          {
+            "name": "es-tcp-probe",
+            "properties": {
+              "protocol": "Tcp",
+              "port": 9200,
+              "intervalInSeconds": 30,
+              "numberOfProbes": 3
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2016-03-30",
+      "name": "es-load-balancer-coord",
+      "type": "Microsoft.Network/loadBalancers",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', 'public-ip')]"
+      ],
+      "properties": {
+        "frontendIPConfigurations": "[variables('internalDigestFELBConfig')]",
+        "backendAddressPools": [
+          {
+            "name": "LBBE"
+          }
+        ],
+        "loadBalancingRules": [
+          {
+            "name": "es-http-rule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', 'es-load-balancer-coord'), '/frontendIPConfigurations/LBFE')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', 'es-load-balancer-coord'), '/backendAddressPools/LBBE')]"
+              },
+              "protocol": "Tcp",
+              "frontendPort": 9200,
+              "backendPort": 9200,
+              "enableFloatingIP": false,
+              "idleTimeoutInMinutes": 5,
+              "probe": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', 'es-load-balancer-coord'), '/probes/es-tcp-probe')]"
+              }
+            }
+          },
+          {
+            "name": "es-tcp-rule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', 'es-load-balancer-coord'), '/frontendIPConfigurations/LBFE')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', 'es-load-balancer-coord'), '/backendAddressPools/LBBE')]"
               },
               "protocol": "Tcp",
               "frontendPort": 9300,

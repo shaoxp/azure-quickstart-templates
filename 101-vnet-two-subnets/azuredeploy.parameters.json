@@ -3,22 +3,34 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "vnetName": {
-      "value": "VNet1"
+      "value": "MCCDNCommonVNet"
     },
     "vnetAddressPrefix": {
       "value": "10.0.0.0/16"
     },
-    "subnet1Name": {
-      "value": "Subnet1"
+    "elsMasterNodesName": {
+      "value": "elsMaster"
     },
-    "subnet1Prefix": {
+    "elsMasterNodesPrefix": {
       "value": "10.0.0.0/24"
     },
-    "subnet2Name": {
-      "value": "Subnet2"
+    "elsDataNodesName": {
+      "value": "elsData"
     },
-    "subnet2Prefix": {
+    "elsDataNodesPrefix": {
       "value": "10.0.1.0/24"
+    },
+    "adminOpsName": {
+      "value": "AdminOps"
+    },
+    "adminOpsPrefix": {
+      "value": "10.0.2.0/24"
+    },
+    "serviceFabricsName": {
+      "value": "ServiceFabrics"
+    },
+    "serviceFabricsPrefix": {
+      "value": "10.0.3.0/24"
     }
   }
 }

@@ -74,9 +74,9 @@
         "description": "Optionally add a virtual machine to the deployment which you can use to connect and manage virtual machines on the internal network"
       }
     },
-    "vmClientNodeCount": {
+    "vmDigestClientNodeCount": {
       "type": "int",
-      "defaultValue": 0,
+      "defaultValue": 2,
       "allowedValues": [
         0,
         1,
@@ -93,14 +93,58 @@
         "description": "Number of Elasticsearch client nodes to provision (Setting this to zero puts the data nodes on the load balancer)"
       }
     },
-    "vmSizeClientNodes": {
+    "vmDigestSizeClientNodes": {
       "type": "string",
-      "defaultValue": "Standard_D2_v2",
+      "defaultValue": "Standard_DS4_v2",
       "allowedValues": [
         "Standard_D2_v2",
         "Standard_DS2_v2",
         "Standard_D3_v2",
         "Standard_D4_v2",
+        "Standard_DS4_v2",
+        "Standard_A2",
+        "Standard_A3",
+        "Standard_A4",
+        "Standard_A5",
+        "Standard_A6",
+        "Standard_A7",
+        "Standard_DS2",
+        "Standard_DS3",
+        "Standard_DS4",
+        "Standard_DS13"
+      ],
+      "metadata": {
+        "description": "Size of the Elasticsearch cluster client nodes"
+      }
+    },
+    "vmCoordinateClientNodeCount": {
+      "type": "int",
+      "defaultValue": 2,
+      "allowedValues": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "metadata": {
+        "description": "Number of Elasticsearch client nodes to provision (Setting this to zero puts the data nodes on the load balancer)"
+      }
+    },
+    "vmCoordinateSizeClientNodes": {
+      "type": "string",
+      "defaultValue": "Standard_DS4_v2",
+      "allowedValues": [
+        "Standard_D2_v2",
+        "Standard_DS2_v2",
+        "Standard_D3_v2",
+        "Standard_D4_v2",
+        "Standard_DS4_v2",
         "Standard_A2",
         "Standard_A3",
         "Standard_A4",
@@ -141,13 +185,14 @@
     },
     "vmSizeDataNodes": {
       "type": "string",
-      "defaultValue": "Standard_D3_v2",
+      "defaultValue": "Standard_DS4_v2",
       "allowedValues": [
         "Standard_D2_v2",
         "Standard_DS2_v2",
         "Standard_D3_v2",
         "Standard_DS3_v2",
         "Standard_D4_v2",
+        "Standard_DS4_v2",
         "Standard_D12_v2",
         "Standard_A2",
         "Standard_A3",
@@ -180,13 +225,14 @@
     },
     "esVersion": {
       "type": "string",
-      "defaultValue": "5.4.0",
+      "defaultValue": "5.6.0",
       "allowedValues": [
         "2.3.1",
         "2.2.2",
         "2.1.2",
         "1.7.5",
-        "5.4.0"
+        "5.4.0",
+        "5.6.0"
       ],
       "metadata": {
         "description": "Elasticsearch version to install"
@@ -299,6 +345,22 @@
         "description": "The storage account key used to access the storage account listed above"
       }
     },
+    "existingVnetGroup":
+    {
+        "type": "string",
+        "defaultValue": "MCCDNCommonGroup",
+        "metadata": {
+          "description": "The Resouce group that existing VENT belong to"
+        }
+    },
+    "existingVnetName":
+    {
+        "type": "string",
+        "defaultValue": "MCCDNCommonVNet",
+        "metadata": {
+          "description": "The existing VENT name"
+        }
+    },
     "_artifactsLocation": {
       "type": "string",
       "defaultValue": "https://raw.githubusercontent.com/shaoxp/azure-quickstart-templates/master/elasticsearch",
@@ -349,6 +411,21 @@
         }
       }
     },
+    "existingNetworkSettings": {
+      "existingGroup": "[parameters('existingVnetGroup')]",
+      "existingVNet": "[parameters('existingVnetName')]",
+      "subnet": {
+        "master": {
+          "name": "ElsMaster"
+        },
+        "data": {
+          "name": "ElsData"
+        },
+        "other": {
+          "name": "AdminOPs"
+        }
+      }
+    },
     "esSettings": {
       "clusterName": "[parameters('esClusterName')]",
       "marvelClusterName": "[concat(parameters('esClusterName'), '-marvel')]",
@@ -368,10 +445,24 @@
     ],
     "marvelTemplateFileName": "[variables('marvelTemplates')[parameters('marvelCluster')]]",
     "clientTemplateFileName": "[variables('clientTemplates')[mod(add(parameters('vmClientNodeCount'), 2), add(parameters('vmClientNodeCount'), 1))]]",
-    "lbBackEndPoolsAdded": {
+    "lbDataBackEndPoolsAdded": {
       "backendPools": [
         {
           "id": "[concat(resourceId('Microsoft.Network/loadBalancers', 'es-load-balancer'), '/backendAddressPools/LBBE')]"
+        }
+      ]
+    },
+    "lbDigestBackEndPoolsAdded": {
+      "backendPools": [
+        {
+          "id": "[concat(resourceId('Microsoft.Network/loadBalancers', 'es-load-balancer-digest'), '/backendAddressPools/LBBE')]"
+        }
+      ]
+    },
+    "lbCoordinateBackEndPoolsAdded": {
+      "backendPools": [
+        {
+          "id": "[concat(resourceId('Microsoft.Network/loadBalancers', 'es-load-balancer-coord'), '/backendAddressPools/LBBE')]"
         }
       ]
     },
@@ -379,10 +470,10 @@
       "backendPools": []
     },
     "dataLBSettingOptions": [
-      "[variables('lbBackEndPoolsAdded')]",
+      "[variables('lbDataBackEndPoolsAdded')]",
       "[variables('lbBackendPoolsRemoved')]"
     ],
-    "dataLBSettings": "[variables('dataLBSettingOptions')[mod(add(parameters('vmClientNodeCount'), 2), add(parameters('vmClientNodeCount'), 1))]]",
+    "dataLBSettings": "[variables('lbDataBackEndPoolsAdded')]",
     "jumpboxTemplateYes": "jumpbox-resources.json",
     "jumpboxTemplateNo": "empty-resources.json",
     "jumpboxTemplateFileName": "[variables(concat('jumpboxTemplate', parameters('jumpbox')))]",
@@ -677,12 +768,17 @@
         "storageAccountType": "Standard_LRS"
       },
       "Standard_DS3_v2": {
-        "dataDisks": 4,
+        "dataDisks": 5,
         "nodesPerStorageAccount": 3,
         "storageAccountType": "Standard_LRS"
       },
       "Standard_D4_v2": {
         "dataDisks": 16,
+        "nodesPerStorageAccount": 2,
+        "storageAccountType": "Standard_LRS"
+      },
+      "Standard_DS4_v2": {
+        "dataDisks": 2,
         "nodesPerStorageAccount": 2,
         "storageAccountType": "Standard_LRS"
       },
@@ -800,7 +896,8 @@
       "[div(sub(add(59, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
       "[div(sub(add(60, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
       "[div(sub(add(61, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(62, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]"
+      "[div(sub(add(62, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
+      "[div(sub(add(63, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]"
     ],
     "dataNodeStorageSettings": {
       "count": "[div(sub(add(parameters('vmDataNodeCount'), variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
@@ -848,6 +945,9 @@
           },
           "subnet": {
             "value": "[variables('networkSettings').subnet.master]"
+          },
+          "existingVNet": {
+            "value": "[variables('existingNetworkSettings')]"
           },
           "osSettings": {
             "value": "[variables('osSettings')]"
@@ -913,20 +1013,29 @@
           "networkSettings": {
             "value": "[variables('networkSettings')]"
           },
+          "existingVNet": {
+            "value": "[variables('existingNetworkSettings')]"
+          },
           "storageSettings": {
             "value": "[variables('dataNodeStorageSettings')]"
           },
           "loadBalancerType": {
             "value": "[parameters('loadBalancerType')]"
           },
-          "ilbIpAddress": {
+          "ilbDataIpAddress": {
             "value": "10.0.2.100"
+          },
+          "ilbDigestIpAddress": {
+            "value": "10.0.2.101"
+          },
+          "ilbCoordinateIpAddress": {
+            "value": "10.0.2.102"
           }
         }
       }
     },
     {
-      "name": "client-nodes",
+      "name": "client-nodes-digest",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
@@ -951,20 +1060,70 @@
           "subnet": {
             "value": "[variables('networkSettings').subnet.other]"
           },
+          "existingVNet": {
+            "value": "[variables('existingNetworkSettings')]"
+          },
           "vmSize": {
-            "value": "[parameters('vmSizeClientNodes')]"
+            "value": "[parameters('vmDigestSizeClientNodes')]"
           },
           "osSettings": {
             "value": "[variables('osSettings')]"
           },
           "vmCount": {
-            "value": "[parameters('vmClientNodeCount')]"
+            "value": "[parameters('vmDigestClientNodeCount')]"
           },
           "lbBackendPools": {
-            "value": "[variables('lbBackEndPoolsAdded')]"
+            "value": "[variables('lbDigestBackEndPoolsAdded')]"
           },
           "namespace": {
-            "value": "[concat(parameters('esClusterName'), '-client')]"
+            "value": "[concat(parameters('esClusterName'), '-client-digest')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "client-nodes-coordinate",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'shared')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('nestedTemplatesFolderName'), '/', variables('clientTemplateFileName'), parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "authSet": {
+            "value": "[variables('authSet')]"
+          },
+          "storageSettings": {
+            "value": "[variables('dataNodeStorageSettings')]"
+          },
+          "subnet": {
+            "value": "[variables('networkSettings').subnet.other]"
+          },
+          "existingVNet": {
+            "value": "[variables('existingNetworkSettings')]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmCoordinateSizeClientNodes')]"
+          },
+          "osSettings": {
+            "value": "[variables('osSettings')]"
+          },
+          "vmCount": {
+            "value": "[parameters('vmCoordinateClientNodeCount')]"
+          },
+          "lbBackendPools": {
+            "value": "[variables('lbCoordinateBackEndPoolsAdded')]"
+          },
+          "namespace": {
+            "value": "[concat(parameters('esClusterName'), '-client-coord')]"
           }
         }
       }
@@ -994,6 +1153,9 @@
           },
           "subnet": {
             "value": "[variables('networkSettings').subnet.data]"
+          },
+          "existingVNet": {
+            "value": "[variables('existingNetworkSettings')]"
           },
           "vmSize": {
             "value": "[parameters('vmSizeDataNodes')]"
@@ -1042,6 +1204,9 @@
           "subnet": {
             "value": "[variables('networkSettings').subnet.other]"
           },
+          "existingVNet": {
+            "value": "[variables('existingNetworkSettings')]"
+          },
           "osSettings": {
             "value": "[variables('windowsSettings')]"
           },
@@ -1076,6 +1241,9 @@
           },
           "subnet": {
             "value": "[variables('networkSettings').subnet.other]"
+          },
+          "existingVNet": {
+            "value": "[variables('existingNetworkSettings')]"
           },
           "osSettings": {
             "value": "[variables('osSettings')]"

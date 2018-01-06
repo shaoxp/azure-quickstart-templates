@@ -26,6 +26,12 @@
         "description": "Reference to the VNET Subnet to deploy the nodes in to"
       }
     },
+    "existingVNet": {
+      "type": "object",
+      "metadata": {
+        "description": "The name of the subnet to deploy resources into"
+      }
+    },
     "vmSize": {
       "type": "string",
       "defaultValue": "Standard_A0",
@@ -59,7 +65,7 @@
     }
   },
   "variables": {
-    "subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('subnet').vnet), '/subnets/', parameters('subnet').name)]",
+    "subnetRef": "[concat(resourceId(parameters('existingVNet').existingGroup, 'Microsoft.Network/virtualNetworks', parameters('existingVNet').existingVNet), '/subnets/', parameters('existingVNet').subnet.other.name]",
     "storageAccountName": "[parameters('storageSettings').shared]",
     "storageAccountNameAFS": "[parameters('storageSettings').afs]",
     "vmName": "[concat(parameters('namespace'), '-vm')]",
