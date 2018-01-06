@@ -47,7 +47,7 @@
     }
   },
   "variables": {
-    "vmSize": "Standard_DS3_v2",
+    "vmSize": "Standard_DS3",
     "subnetRef": "[concat(resourceId(parameters('existingVNet').existingGroup, 'Microsoft.Network/virtualNetworks', parameters('existingVNet').existingVNet), '/subnets/', parameters('existingVNet').subnet.other.name)]",
     "vmName": "[concat(parameters('namespace'), '-vm')]",
     "publicIpName": "[concat(parameters('namespace'), '-pip')]",

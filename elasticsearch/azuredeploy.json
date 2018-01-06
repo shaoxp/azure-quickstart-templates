@@ -114,7 +114,7 @@
     },
     "vmDigestSizeClientNodes": {
       "type": "string",
-      "defaultValue": "Standard_DS3_v2",
+      "defaultValue": "Standard_DS3",
       "allowedValues": [
         "Standard_D2_v2",
         "Standard_DS2_v2",
@@ -158,7 +158,7 @@
     },
     "vmCoordinateSizeClientNodes": {
       "type": "string",
-      "defaultValue": "Standard_DS3_v2",
+      "defaultValue": "Standard_DS3",
       "allowedValues": [
         "Standard_D2_v2",
         "Standard_DS2_v2",
@@ -183,7 +183,7 @@
     },
     "vmSizeMasterNodes": {
       "type": "string",
-      "defaultValue": "Standard_D3_v2",
+      "defaultValue": "Standard_DS3",
       "allowedValues": [
         "Standard_D2_v2",
         "Standard_DS2_v2",
@@ -206,7 +206,7 @@
     },
     "vmSizeDataNodes": {
       "type": "string",
-      "defaultValue": "Standard_DS3_v2",
+      "defaultValue": "Standard_DS3",
       "allowedValues": [
         "Standard_D2_v2",
         "Standard_DS2_v2",
@@ -827,7 +827,7 @@
         "storageAccountType": "Premium_LRS"
       },
       "Standard_DS3": {
-        "dataDisks": 8,
+        "dataDisks": 2,
         "nodesPerStorageAccount": 4,
         "storageAccountType": "Premium_LRS"
       },
