@@ -4,7 +4,6 @@
   "parameters": {
     "vnetName": {
       "type": "string",
-      "defaultValue": "MCCDNCommonVNet",
       "metadata": {
         "description": "VNet name"
       }

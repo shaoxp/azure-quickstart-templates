@@ -65,7 +65,7 @@
     }
   },
   "variables": {
-    "subnetRef": "[concat(resourceId(parameters('existingVNet').existingGroup, 'Microsoft.Network/virtualNetworks', parameters('existingVNet').existingVNet), '/subnets/', parameters('existingVNet').subnet.other.name]",
+    "subnetRef": "[concat(resourceId(parameters('existingVNet').existingGroup, 'Microsoft.Network/virtualNetworks', parameters('existingVNet').existingVNet), '/subnets/', parameters('existingVNet').subnet.other.name)]",
     "storageAccountName": "[parameters('storageSettings').shared]",
     "storageAccountNameAFS": "[parameters('storageSettings').afs]",
     "vmName": "[concat(parameters('namespace'), '-vm')]",

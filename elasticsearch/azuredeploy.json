@@ -4,7 +4,7 @@
   "parameters": {
     "adminUsername": {
       "type": "string",
-      "defaultValue": "mooncake",
+      "defaultValue": "logadmin",
       "metadata": {
         "description": "Admin username used when provisioning virtual machines"
       }
@@ -74,6 +74,25 @@
         "description": "Optionally add a virtual machine to the deployment which you can use to connect and manage virtual machines on the internal network"
       }
     },
+    "vmClientNodeCount": {
+      "type": "int",
+      "defaultValue": 2,
+      "allowedValues": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "metadata": {
+        "description": "Number of Elasticsearch client nodes to provision (Setting this to zero puts the data nodes on the load balancer)"
+      }
+    },
     "vmDigestClientNodeCount": {
       "type": "int",
       "defaultValue": 2,
@@ -95,11 +114,12 @@
     },
     "vmDigestSizeClientNodes": {
       "type": "string",
-      "defaultValue": "Standard_DS4_v2",
+      "defaultValue": "Standard_DS3_v2",
       "allowedValues": [
         "Standard_D2_v2",
         "Standard_DS2_v2",
         "Standard_D3_v2",
+        "Standard_DS3_v2",
         "Standard_D4_v2",
         "Standard_DS4_v2",
         "Standard_A2",
@@ -138,11 +158,12 @@
     },
     "vmCoordinateSizeClientNodes": {
       "type": "string",
-      "defaultValue": "Standard_DS4_v2",
+      "defaultValue": "Standard_DS3_v2",
       "allowedValues": [
         "Standard_D2_v2",
         "Standard_DS2_v2",
         "Standard_D3_v2",
+        "Standard_DS3_v2",
         "Standard_D4_v2",
         "Standard_DS4_v2",
         "Standard_A2",
@@ -185,7 +206,7 @@
     },
     "vmSizeDataNodes": {
       "type": "string",
-      "defaultValue": "Standard_DS4_v2",
+      "defaultValue": "Standard_DS3_v2",
       "allowedValues": [
         "Standard_D2_v2",
         "Standard_DS2_v2",
@@ -348,7 +369,7 @@
     "existingVnetGroup":
     {
         "type": "string",
-        "defaultValue": "MCCDNCommonGroup",
+        "defaultValue": "LogCommonGroup",
         "metadata": {
           "description": "The Resouce group that existing VENT belong to"
         }
@@ -356,14 +377,14 @@
     "existingVnetName":
     {
         "type": "string",
-        "defaultValue": "MCCDNCommonVNet",
+        "defaultValue": "LogCommonVNet",
         "metadata": {
           "description": "The existing VENT name"
         }
     },
     "_artifactsLocation": {
       "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/shaoxp/azure-quickstart-templates/master/elasticsearch",
+      "defaultValue": "https://raw.githubusercontent.com/shaoxp/azure-quickstart-templates/btv/elasticsearch",
       "metadata": {
         "description": "Change this value to your repo name if deploying from a fork"
       }
@@ -379,7 +400,7 @@
   "variables": {
     "nestedTemplatesFolderName": "nestedtemplates",
     "scriptsLocation": "[concat(parameters('_artifactsLocation'), '/scripts/')]",
-    "sharedScriptsLocation": "https://raw.githubusercontent.com/shaoxp/azure-quickstart-templates/master/shared_scripts/ubuntu/",
+    "sharedScriptsLocation": "https://raw.githubusercontent.com/shaoxp/azure-quickstart-templates/btv/shared_scripts/ubuntu/",
     "storageAccountPrefix": "[concat(substring(uniqueString(resourceGroup().id, parameters('esClusterName')), 0, 6), substring(parameters('esClusterName'), 0, 3))]",
     "storageAccountNameAFS": "[concat(variables('storageAccountPrefix'), 'afs')]",
     "storageAccountNameShared": "[concat(variables('storageAccountPrefix'), 'sh')]",
@@ -445,6 +466,9 @@
     ],
     "marvelTemplateFileName": "[variables('marvelTemplates')[parameters('marvelCluster')]]",
     "clientTemplateFileName": "[variables('clientTemplates')[mod(add(parameters('vmClientNodeCount'), 2), add(parameters('vmClientNodeCount'), 1))]]",
+    "clientDigestTemplateFileName": "[variables('clientTemplates')[mod(add(parameters('vmDigestClientNodeCount'), 2), add(parameters('vmDigestClientNodeCount'), 1))]]",
+    "clientCoordinateTemplateFileName": "[variables('clientTemplates')[mod(add(parameters('vmCoordinateClientNodeCount'), 2), add(parameters('vmCoordinateClientNodeCount'), 1))]]",
+   
     "lbDataBackEndPoolsAdded": {
       "backendPools": [
         {
@@ -768,9 +792,9 @@
         "storageAccountType": "Standard_LRS"
       },
       "Standard_DS3_v2": {
-        "dataDisks": 5,
+        "dataDisks": 2,
         "nodesPerStorageAccount": 3,
-        "storageAccountType": "Standard_LRS"
+        "storageAccountType": "Premium_LRS"
       },
       "Standard_D4_v2": {
         "dataDisks": 16,
@@ -780,7 +804,7 @@
       "Standard_DS4_v2": {
         "dataDisks": 2,
         "nodesPerStorageAccount": 2,
-        "storageAccountType": "Standard_LRS"
+        "storageAccountType": "Premium_LRS"
       },
       "Standard_D12_v2": {
         "dataDisks": 8,
@@ -1044,7 +1068,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('nestedTemplatesFolderName'), '/', variables('clientTemplateFileName'), parameters('_artifactsLocationSasToken'))]",
+          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('nestedTemplatesFolderName'), '/', variables('clientDigestTemplateFileName'), parameters('_artifactsLocationSasToken'))]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -1091,7 +1115,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('nestedTemplatesFolderName'), '/', variables('clientTemplateFileName'), parameters('_artifactsLocationSasToken'))]",
+          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('nestedTemplatesFolderName'), '/', variables('clientCoordinateTemplateFileName'), parameters('_artifactsLocationSasToken'))]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -1170,7 +1194,7 @@
             "value": "[variables('osSettings')]"
           },
           "dataDiskSize": {
-            "value": 2046
+            "value": 1023
           },
           "lbBackendPools": {
             "value": "[variables('dataLBSettings')]"
