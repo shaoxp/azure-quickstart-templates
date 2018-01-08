@@ -121,7 +121,7 @@
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[concat('master-vm', copyIndex())]",
+          "computerName": "[concat(variables('vmName'), copyIndex())]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('authSet').password]",
           "linuxConfiguration": "[parameters('osSettings').linuxConfiguration]"

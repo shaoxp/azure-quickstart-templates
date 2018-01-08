@@ -237,7 +237,7 @@
     },
     "esClusterName": {
       "type": "string",
-      "defaultValue": "elasticsearch",
+      "defaultValue": "CdnEls",
       "metadata": {
         "description": "The name of the Elasticsearch cluster"
       }
