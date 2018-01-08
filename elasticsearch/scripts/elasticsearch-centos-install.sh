@@ -351,7 +351,7 @@ fi
 #expand_staticip_range "$IP_RANGE"
 log "tag1"
 S=$(expand_ip_range "$DISCOVERY_ENDPOINTS")
-HOSTS_CONFIG="[\"${S// /\",\"}\"]"
+HOSTS_CONFIG="[\"CdnEls-master-vm0\",\"CdnEls-master-vm1\",\"CdnEls-master-vm2\",\"CdnEls-data-vm0\",\"CdnEls-data-vm1\",\"CdnEls-data-vm2\",\"CdnEls-data-vm3\",\"CdnEls-data-vm4\",\"CdnEls-data-vm5\",\"CdnEls-client-digest-vm0\",\"CdnEls-client-digest-vm1\",\"CdnEls-client-coord-vm0\",\"CdnEls-client-coord-vm1\"]"
 log "tag2"
 #Format the static discovery host endpoints for Elasticsearch configuration ["",""] format
 #HOSTS_CONFIG="[\"${DISCOVERY_ENDPOINTS//-/\",\"}\"]"
@@ -364,12 +364,17 @@ mv /etc/elasticsearch/elasticsearch.yml /etc/elasticsearch/elasticsearch.bak
 # Set cluster and machine names - just use hostname for our node.name
 echo "cluster.name: $CLUSTER_NAME" >> /etc/elasticsearch/elasticsearch.yml
 echo "node.name: ${HOSTNAME}" >> /etc/elasticsearch/elasticsearch.yml
+echo "network.host: ${HOSTNAME}" >> /etc/elasticsearch/elasticsearch.yml
 
 # Configure paths - if we have data disks attached then use them
 if [ -n "$DATAPATH_CONFIG" ]; then
     log "Update configuration with data path list of $DATAPATH_CONFIG"
     echo "path.data: $DATAPATH_CONFIG" >> /etc/elasticsearch/elasticsearch.yml
 fi
+
+echo "bootstrap.memory_lock: true" >> /etc/elasticsearch/elasticsearch.yml
+echo "http.cors.enabled: true" >> /etc/elasticsearch/elasticsearch.yml
+echo "http.cors.allow-origin: \"*\"" >> /etc/elasticsearch/elasticsearch.yml
 
 # if we are using AFS, then add that path
 #if [ ${USE_AFS} -ne 0 ]; 
