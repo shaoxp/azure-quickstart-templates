@@ -65,17 +65,18 @@
     }
   },
   "variables": {
-    "subnetRef": "[concat(resourceId(parameters('existingVNet').existingGroup, 'Microsoft.Network/virtualNetworks', parameters('existingVNet').existingVNet), '/subnets/', parameters('existingVNet').subnet.other.name]",
+    "subnetRef": "[concat(resourceId(parameters('existingVNet').existingGroup, 'Microsoft.Network/virtualNetworks', parameters('existingVNet').existingVNet), '/subnets/', parameters('existingVNet').subnet.other.name)]",
     "storageAccountName": "[parameters('storageSettings').shared]",
     "storageAccountNameAFS": "[parameters('storageSettings').afs]",
     "vmName": "[concat(parameters('namespace'), '-vm')]",
-    "nicName": "[concat(parameters('namespace'), '-nic')]"
+    "nicName": "[concat(parameters('namespace'), '-nic')]",
+    "availabilitySetsName": "[concat(parameters('namespace'), '-es-client-set')]"
   },
   "resources": [
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Compute/availabilitySets",
-      "name": "es-client-set",
+      "name": "[variables('availabilitySetsName')]",
       "location": "[resourceGroup().location]",
       "properties": {}
     },
@@ -114,17 +115,17 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicName'), copyindex()))]",
-        "[resourceId('Microsoft.Compute/availabilitySets', 'es-client-set')]"
+        "[resourceId('Microsoft.Compute/availabilitySets',  variables('availabilitySetsName'))]"
       ],
       "properties": {
         "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'es-client-set')]"
+          "id": "[resourceId('Microsoft.Compute/availabilitySets',  variables('availabilitySetsName'))]"
         },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[concat('client-vm', copyIndex())]",
+          "computerName": "[concat(parameters('namespace'), copyIndex())]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('authSet').password]",
           "linuxConfiguration": "[parameters('osSettings').linuxConfiguration]"

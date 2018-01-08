@@ -74,6 +74,25 @@
         "description": "Optionally add a virtual machine to the deployment which you can use to connect and manage virtual machines on the internal network"
       }
     },
+    "vmClientNodeCount": {
+      "type": "int",
+      "defaultValue": 2,
+      "allowedValues": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "metadata": {
+        "description": "Number of Elasticsearch client nodes to provision (Setting this to zero puts the data nodes on the load balancer)"
+      }
+    },
     "vmDigestClientNodeCount": {
       "type": "int",
       "defaultValue": 2,
@@ -445,6 +464,8 @@
     ],
     "marvelTemplateFileName": "[variables('marvelTemplates')[parameters('marvelCluster')]]",
     "clientTemplateFileName": "[variables('clientTemplates')[mod(add(parameters('vmClientNodeCount'), 2), add(parameters('vmClientNodeCount'), 1))]]",
+    "clientDigestTemplateFileName": "[variables('clientTemplates')[mod(add(parameters('vmDigestClientNodeCount'), 2), add(parameters('vmDigestClientNodeCount'), 1))]]",
+    "clientCoordinateTemplateFileName": "[variables('clientTemplates')[mod(add(parameters('vmCoordinateClientNodeCount'), 2), add(parameters('vmCoordinateClientNodeCount'), 1))]]",
     "lbDataBackEndPoolsAdded": {
       "backendPools": [
         {
@@ -780,7 +801,7 @@
       "Standard_DS4_v2": {
         "dataDisks": 2,
         "nodesPerStorageAccount": 2,
-        "storageAccountType": "Standard_LRS"
+        "storageAccountType": "Premium_LRS"
       },
       "Standard_D12_v2": {
         "dataDisks": 8,
@@ -1023,13 +1044,13 @@
             "value": "[parameters('loadBalancerType')]"
           },
           "ilbDataIpAddress": {
-            "value": "10.0.2.100"
+            "value": "10.0.2.200"
           },
           "ilbDigestIpAddress": {
-            "value": "10.0.2.101"
+            "value": "10.0.2.201"
           },
           "ilbCoordinateIpAddress": {
-            "value": "10.0.2.102"
+            "value": "10.0.2.202"
           }
         }
       }
@@ -1044,7 +1065,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('nestedTemplatesFolderName'), '/', variables('clientTemplateFileName'), parameters('_artifactsLocationSasToken'))]",
+          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('nestedTemplatesFolderName'), '/', variables('clientDigestTemplateFileName'), parameters('_artifactsLocationSasToken'))]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -1091,7 +1112,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('nestedTemplatesFolderName'), '/', variables('clientTemplateFileName'), parameters('_artifactsLocationSasToken'))]",
+          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('nestedTemplatesFolderName'), '/', variables('clientCoordinateTemplateFileName'), parameters('_artifactsLocationSasToken'))]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {

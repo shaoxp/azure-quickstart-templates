@@ -99,8 +99,7 @@
           "privateIPAllocationMethod": "Static"
         }
       }
-    ],
-    "feLoadBalancerConfig": "[variables(concat(parameters('loadBalancerType'), 'FELBConfig'))]"
+    ]
   },
   "resources": [
     {
@@ -318,7 +317,7 @@
         "[resourceId('Microsoft.Network/publicIPAddresses', 'public-ip')]"
       ],
       "properties": {
-        "frontendIPConfigurations": "[variables('internalDigestFELBConfig')]",
+        "frontendIPConfigurations": "[variables('internalCoordinateFELBConfig')]",
         "backendAddressPools": [
           {
             "name": "LBBE"
