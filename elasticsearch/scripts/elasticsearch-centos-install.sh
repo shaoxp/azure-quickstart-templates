@@ -351,7 +351,7 @@ fi
 #expand_staticip_range "$IP_RANGE"
 log "tag1"
 S=$(expand_ip_range "$DISCOVERY_ENDPOINTS")
-HOSTS_CONFIG="[\"CdnEls-master-vm0\",\"CdnEls-master-vm1\",\"CdnEls-master-vm2\",\"CdnEls-data-vm0\",\"CdnEls-data-vm1\",\"CdnEls-data-vm2\",\"CdnEls-data-vm3\",\"CdnEls-data-vm4\",\"CdnEls-data-vm5\",\"CdnEls-client-digest-vm0\",\"CdnEls-client-digest-vm1\",\"CdnEls-client-coord-vm0\",\"CdnEls-client-coord-vm1\"]"
+HOSTS_CONFIG="[\"cdnels-master-vm0\",\"cdnels-master-vm1\",\"cdnels-master-vm2\",\"cdnels-data-vm0\",\"cdnels-data-vm1\",\"cdnels-data-vm2\",\"cdnels-data-vm3\",\"cdnels-data-vm4\",\"cdnels-data-vm5\",\"cdnels-client-digest-vm0\",\"cdnels-client-digest-vm1\",\"cdnels-client-coord-vm0\",\"cdnels-client-coord-vm1\"]"
 log "tag2"
 #Format the static discovery host endpoints for Elasticsearch configuration ["",""] format
 #HOSTS_CONFIG="[\"${DISCOVERY_ENDPOINTS//-/\",\"}\"]"
