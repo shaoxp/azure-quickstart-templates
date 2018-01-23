@@ -170,6 +170,16 @@
               },
               "caching": "None",
               "createOption": "Empty"
+            },
+            {
+              "name": "datadisk3",
+              "diskSizeGB": "[parameters('dataDiskSize')]",
+              "lun": 2,
+              "vhd": {
+                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', concat(variables('storageAccountName'), parameters('storageSettings').mapping[copyindex()])), '2016-01-01').primaryEndpoints.blob, variables('vmStorageAccountContainerName'), '/', parameters('namespace'), 'vm', copyindex(), 'dataDisk3', '.vhd')]"
+              },
+              "caching": "None",
+              "createOption": "Empty"
             }
           ]
         },
